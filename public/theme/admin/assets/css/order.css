@@ -1,0 +1,118 @@
+
+.invoice-container {
+    background-color: #ffe4e1;
+    display: none;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.invoice-content {
+    padding: 25px;
+}
+
+.print-button {
+    background-color: #00c896;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.invoice-title {
+    color: #e91e63;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.invoice-details {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.invoice-details hr {
+    border: 0;
+    border-top: 1px dashed #333;
+    margin: 10px 0;
+}
+
+.invoice-summary {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.invoice-summary div {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.barcode {
+    margin: 30px 0 0 0;
+    text-align: center; /* Center-aligns content within the barcode div */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invoice-code {
+    font-size: 12px;
+    color: #333;
+}
+
+/* CSS for printing */
+@media print {
+    @page {
+        margin: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        margin: 0;
+    }
+
+    #invoice {
+        width: 100%;
+        height: 100%;
+    }
+
+    .invoice-container {
+        background-color: #ffe4e1;
+        width: 100%; /* Điều chỉnh độ rộng */
+        height: 100%;
+        box-shadow: none; /* Xóa bỏ shadow khi in */
+        border-radius: 0; /* Xóa bo góc */
+        display: block;
+        page-break-before: always;
+        page-break-after: always;
+        text-align: center;
+    }
+    .barcode {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .print-button {
+        display: none; /* Ẩn nút in khi in */
+    }
+
+    .invoice-details, .invoice-summary {
+        font-size: 12px; /* Điều chỉnh kích thước chữ khi in */
+    }
+
+    .invoice-title {
+        font-size: 22px; /* Kích thước tiêu đề nhỏ lại khi in */
+    }
+}
+

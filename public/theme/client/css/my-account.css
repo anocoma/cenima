@@ -1,0 +1,339 @@
+    /* Thông tin tài khoản */
+    /* ========================================================= */
+
+    .my-account-tabs {
+        display: flex;
+        border-bottom: 1px solid #ccc;
+        font-size: 0.8em;
+    }
+
+    .my-account-tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: center;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        color: #1e264f;
+        /* Màu mặc định */
+        background-color: white;
+        /* Nền mặc định */
+    }
+
+    .my-account-tab:hover {
+        color: #fff;
+    }
+
+    .my-account-tab.my-account-active {
+        background-color: #ff7307;
+        color: white;
+        border-bottom: 2px solid red;
+    }
+
+    .my-account-tab:not(.my-account-active):hover {
+        /* background-color: #e2e6ea; */
+        background-color: #ff7307;
+        border-bottom: 2px solid red;
+    }
+
+    .my-account-upload-container {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .my-account-image-placeholder {
+        width: 300px;
+        height: 200px;
+        border: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f1f1f1;
+        margin-right: 20px;
+    }
+
+    .my-account-image-placeholder p {
+        color: #aaa;
+    }
+
+    .my-account-buttons {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .my-account-upload-btn,
+    .my-account-save-btn {
+        background-color: #ff7307;
+        border: none;
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: opacity 0.3s ease;
+    }
+
+    .my-account-upload-btn:hover,
+    .my-account-save-btn:hover {
+        opacity: 0.8;
+    }
+
+    .my-account-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .my-account-form-group {
+        width: 50%;
+        padding: 10px;
+    }
+
+    .my-account-mb-3 {
+        position: relative;
+        margin-bottom: 30px;
+        margin-bottom: 25px;
+    }
+
+    /* Căn chỉnh thông báo lỗi bên dưới input */
+    .my-account-mb-3 .text-danger {
+        position: absolute;
+        bottom: -20px; /* Điều chỉnh khoảng cách giữa input và thông báo lỗi */
+        left: 0;
+        font-size: 14px;
+        color: #ff5b5b;
+        margin: 0;
+    }
+
+    /* Đảm bảo các input có kích thước đồng đều */
+    .my-account-mb-3 input {
+        width: 100%;
+    }
+
+    .my-account-form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 5px;
+    }
+
+    .my-account-form-select {
+        width: 100%;
+        padding: -1px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 5px;
+        background-color: white;
+        margin-bottom: 21px;
+    }
+
+    .my-account-text-center {
+        text-align: center;
+    }
+
+    .my-account-my-3 {
+        margin: 20px 0;
+    }
+
+    .my-account-btn {
+        background-color: #192041;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        border-radius: 8px;
+        /* Bo tròn 4 góc */
+        background-color: #ff7307;
+    }
+
+    .my-account-btn:hover {
+        background-color: #72c8ca;
+        /* Màu nền nhạt hơn khi hover */
+    }
+
+    .my-account-d-block {
+        display: block;
+        margin-top: 40px;
+        color: #ff7307;
+    }
+
+    .my-account-d-block:hover {
+        color: #ff7307;
+        text-decoration: underline;
+    }
+
+    .my-account-modal {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-width: 90%; /* Điều chỉnh khung với tỷ lệ phần trăm */
+        width: 400px; /* Thiết lập chiều rộng tối đa */
+        height: auto; /* Để chiều cao tự động, giúp giảm vỡ layout */
+        max-height: 80%; /* Giới hạn chiều cao ở 80% */
+        overflow-y: auto; /* Thêm cuộn dọc nếu nội dung vượt quá */
+    }
+
+    .my-account-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .my-account-upload-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .my-account-image-upload-container {
+        border: 2px solid #ccc;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background-color: #f0f0f0;
+    }
+
+    .my-account-image-upload-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .my-account-form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .my-account-form-group {
+        flex: 1;
+        min-width: 45%; /* Điều chỉnh để không chiếm hết chiều rộng khi thu nhỏ */
+    }
+
+
+    /* Hành trình điện ảnh */
+
+    /* Css lịch sử giao dịch */
+
+    .row.mb-3.title-detail {
+        margin: 10px 0px 20px 0px;
+    }
+
+    div#detail-ticket {
+        margin-left: 15px;
+    }
+
+    b,
+    strong {
+        font-weight: bold;
+        color: #192041;
+    }
+
+    .content-detail {
+        margin-top: 6px;
+        padding-left: 10px;
+        margin-right: 15px;
+
+    }
+
+    .box-address {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    .info-detail .col-md-12 {
+        margin-bottom: 10px;
+        margin-top: 15px;
+        display: flex;
+        justify-content: left;
+    }
+
+    .info-detail div {
+        margin-right: 15px;
+    }
+
+    .info-detail button {
+        background-color: #192041;
+        color: white;
+        padding: 5px 10px;
+    }
+
+    .box-detail-history {
+        background-color: #192041;
+        color: white;
+        height: 50px;
+        margin-left: 0px;
+        line-height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .table-history {
+        margin-left: 5px;
+    }
+
+    .table-history table {
+        width: 100%;
+        border: 1px solid #dcdcdc;
+        box-shadow: 0 0 3px;
+    }
+
+    .table-history table thead {
+        background: #192041;
+        height: 40px;
+        color: white;
+        /* padding: 6px; */
+    }
+
+    .table-history table th {
+        padding: 10px;
+    }
+
+    .table-history table td {
+        border: 1px solid #ccc;
+        padding: 7px;
+    }
+
+    .back-list-history {
+        margin-top: 15px;
+    }
+
+    .table-history table th.total-detail {
+        text-align: right;
+    }
+
+    /* Css paginate trang lịch sử giao dịch */
+
+
+
+    .xanh-fpt {
+        color: #192041;
+    }

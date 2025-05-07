@@ -1,0 +1,121 @@
+pipeline {
+    agent { label 'lab-server' }
+    environment {
+        APP_DIR = '/datas/cinema-jenkins'
+        APP_URL = 'http://192.168.199.99:7788'
+        DB_HOST = '127.0.0.1'
+        DB_PORT = '3306'
+        DB_NAME = 'cenima'
+        DB_USER = 'cenima'
+        DB_PASS = 'cenima'
+        ARTISAN = "sudo -u www-data php ${APP_DIR}/artisan"
+        QUEUE_WORK = "sudo -u www-data sh -c \"cd ${APP_DIR} && (pgrep -f 'queue:work' && kill \$(pgrep -f 'queue:work')) || true; nohup php artisan queue:work --daemon > queue.log 2>&1 &\""
+        SCHEDULE_WORK = "sudo -u www-data sh -c \"cd ${APP_DIR} && (pgrep -f 'schedule:work' && kill \$(pgrep -f 'schedule:work')) || true; nohup php artisan schedule:work > schedule.log 2>&1 &\""
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist'
+                sh 'npm ci --quiet --prefer-offline'
+                sh 'npm run build'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    try {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            def userInput = input(
+                                id: 'confirmDeploy',
+                                message: "Deploy to ${APP_DIR}?",
+                                parameters: [
+                                    choice(name: 'DEPLOY', choices: ['Yes', 'No'], description: 'Choose Yes to deploy, No to stop pipeline')
+                                ]
+                            )
+                            if (userInput == 'No') {
+                                echo "Deployment skipped by user."
+                                error("Pipeline stopped as user chose not to deploy.")
+                            }
+                        }
+                        echo 'Deploying to ${APP_DIR}...'
+                        sh 'sudo pkill -f "php.*queue:work" || true'
+                        sh 'sudo pkill -f "php.*schedule:work" || true'
+                        sh 'sudo systemctl restart php8.1-fpm || true'
+                        sh "sudo rsync -a --delete . ${APP_DIR}/"
+                        sh "sudo chown -R www-data:www-data ${APP_DIR}"
+                        sh "sudo chmod -R 755 ${APP_DIR}"
+                        sh "sudo -u www-data cp ${APP_DIR}/.env.example ${APP_DIR}/.env || echo 'No .env.example, creating empty .env'"
+                        sh "sudo -u www-data sed -i 's|^APP_URL=.*|APP_URL=${APP_URL}|' ${APP_DIR}/.env || echo 'APP_URL=${APP_URL}' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=mysql|' ${APP_DIR}/.env || echo 'DB_CONNECTION=mysql' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_HOST=.*|DB_HOST=${DB_HOST}|' ${APP_DIR}/.env || echo 'DB_HOST=${DB_HOST}' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_PORT=.*|DB_PORT=${DB_PORT}|' ${APP_DIR}/.env || echo 'DB_PORT=${DB_PORT}' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_DATABASE=.*|DB_DATABASE=${DB_NAME}|' ${APP_DIR}/.env || echo 'DB_DATABASE=${DB_NAME}' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_USERNAME=.*|DB_USERNAME=${DB_USER}|' ${APP_DIR}/.env || echo 'DB_USERNAME=${DB_USER}' >> ${APP_DIR}/.env"
+                        sh "sudo -u www-data sed -i 's|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|' ${APP_DIR}/.env || echo 'DB_PASSWORD=${DB_PASS}' >> ${APP_DIR}/.env"
+                        sh "${ARTISAN} key:generate"
+                        sh "${ARTISAN} queue:table || true"
+                        sh "${ARTISAN} migrate:refresh --force" 
+                        sh "${ARTISAN} storage:link || true"
+                        sh "${ARTISAN} db:seed || true"
+                        sh "${ARTISAN} config:cache --no-interaction"
+                        sh "${ARTISAN} route:cache --no-interaction"
+                        sh "${QUEUE_WORK}"
+                        sh "${SCHEDULE_WORK}"
+                        sh "sudo systemctl reload nginx || true"
+                    } catch (Exception e) {
+                        echo "Deployment failed: ${e.message}"
+                        if (e.message.contains('User did not respond')) {
+                            echo "Timeout after 5 minutes, deployment skipped."
+                            error("Pipeline stopped due to timeout.")
+                        }
+                        error("Pipeline stopped due to deployment failure: ${e.message}")
+                    }
+                }
+            }
+        }
+        stage('Show Logs') {
+            steps {
+                script {
+                    try {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            def userInput = input(
+                                id: 'confirmShowLogs',
+                                message: "Show logs for ${APP_DIR}?",
+                                parameters: [
+                                    choice(name: 'SHOW_LOGS', choices: ['Yes', 'No'], description: 'Choose Yes to show logs, No to stop pipeline')
+                                ]
+                            )
+                            if (userInput == 'No') {
+                                echo "Show Logs skipped by user."
+                                error("Pipeline stopped as user chose not to show logs.")
+                            }
+                        }
+                        echo 'Displaying logs...'
+                        sh "sudo -u www-data tail -n 100 ${APP_DIR}/storage/logs/laravel.log || echo 'No laravel.log found'"
+                        sh "sudo -u www-data tail -n 100 ${APP_DIR}/queue.log || echo 'No queue.log found'"
+                        sh "sudo -u www-data tail -n 100 ${APP_DIR}/schedule.log || echo 'No schedule.log found'"
+                    } catch (Exception e) {
+                        echo "Show Logs confirmation failed: ${e.message}"
+                        if (e.message.contains('User did not respond')) {
+                            echo "Timeout after 5 minutes, Show Logs skipped."
+                            error("Pipeline stopped due to timeout in Show Logs.")
+                        }
+                        throw e
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

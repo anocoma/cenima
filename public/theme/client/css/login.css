@@ -1,0 +1,325 @@
+.content-login-3 {
+    margin: 10% auto 3% auto;
+    padding: 1px 110px 1px 110px;
+    /*border: 1px solid #888;*/
+    width: 60%;
+}
+
+
+.logo-login {
+    padding-top: 30px;
+    height: 440px;
+    border-radius: 15px;
+}
+
+.logo-login img {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.logo-register {
+    padding-top: 30px;
+    height: 480px;
+    border-radius: 15px;
+}
+
+.logo-register img {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.text-login {
+    text-align: center;
+    margin: 5px auto 23px auto;
+}
+
+.nutfb {
+    margin-top: 20px;
+}
+
+.bg-round-regis {
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fbfbfb;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.bg-round-login {
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fbfbfb;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.content-forgot {
+    margin: 10% auto 3% auto;
+    /*padding: 1px 240px 1px 240px;*/
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}
+
+.bg-round-forgot {
+    width: 40%;
+    box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.5);
+    background-color: #fbfbfb;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.rs-pw {
+    margin-left: 21%;
+}
+
+.rs-pw button {
+    width: 70%;
+    margin-top: 10px;
+    /*height: 40px;*/
+    line-height: 37px;
+    text-align: center;
+    float: left;
+    background: #ff9344;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.rs-pw button:hover {
+    background: #f88a3d;
+    color: #fff;
+    border: 1px solid #f88a3d;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+.rs-pw-2 {
+    margin-left: 21%;
+}
+
+.rs-pw-2 button {
+    width: 70%;
+    margin-top: 10px;
+    /*height: 40px;*/
+    line-height: 28px;
+    text-align: center;
+    float: left;
+    background: #ff9344;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.rs-pw-2 button:hover {
+    background: #f88a3d;
+    color: #fff;
+    border: 1px solid #f88a3d;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+.mail {
+    color: #ff9344;
+}
+
+.forgot-fom {
+    width: 100%;
+}
+
+.nutgm a {
+    width: 100%;
+    margin-top: 20px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.54);
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.nutgm a:hover {
+    background: #ff9344;
+    color: whitesmoke;
+    border: 1px solid #ead6d6;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.nutdn button {
+    width: 100%;
+    margin-top: 10px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    background: #ff9344;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.nutdn button:hover {
+    background: #f88a3d;
+    color: #fff;
+    border: 1px solid #f88a3d;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+form {
+    margin-left: 46px;
+    width: 80%;
+}
+.fom2{
+    margin-left: 55px;
+}
+.custom-form {
+    margin-top: 127px;
+    position: relative;
+}
+.quenpw{
+    position: absolute;
+    bottom: 0;
+    left: 162px;
+    color: #f88a3d;
+    letter-spacing: 0;
+}
+.quenpw:hover{
+
+    color: #f1761d;
+    letter-spacing: 0;
+    text-decoration: none;
+}
+@media (max-width: 767px) {
+    form {
+        margin-left: 0;
+        width: 100%;
+    }
+    .fom2{
+        margin-left: 0;
+    }
+    .quenpw{
+        position: absolute;
+        bottom: 0;
+        left: 130px;
+        color: #f88a3d;
+        letter-spacing: 0;
+    }
+    .content-login-3 {
+        width: 80%;
+        margin-top: 24%;
+        padding: 20px;
+    }
+
+    .content-forgot {
+        margin-top: 36%;
+        margin-bottom: 13%;
+    }
+
+    .rs-pw {
+        margin-left: 0;
+    }
+
+    .rs-pw button {
+        width: 100%;
+    }
+    .rs-pw-2 {
+        margin-left: 0;
+    }
+    .rs-pw-2 button {
+        width: 100%;
+    }
+
+    .bg-round-forgot {
+        width: 90%;
+        box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.5);
+        background-color: #fbfbfb;
+        border-radius: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .bg-round-regis {
+        height: 555px;
+        background-color: whitesmoke;
+        border-radius: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .bg-round-login {
+        height: 513px;
+        background-color: whitesmoke;
+        border-radius: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .logo-login {
+        display: none;
+    }
+
+    .logo-register {
+        display: none;
+    }
+
+    .fom-login {
+        margin-bottom: 225px;
+    }
+
+    .fom-regis {
+        margin-bottom: 308px;
+    }
+}
+
+

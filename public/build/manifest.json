@@ -1,0 +1,40 @@
+{
+  "resources/js/app.js": {
+    "file": "assets/app-Br0aVGLH.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/book-ticket.js": {
+    "file": "assets/book-ticket-FnoKWT8T.js",
+    "name": "book-ticket",
+    "src": "resources/js/book-ticket.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/js/choose-seat.js": {
+    "file": "assets/choose-seat-C7V7KM1H.js",
+    "name": "choose-seat",
+    "src": "resources/js/choose-seat.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/js/public.js": {
+    "file": "assets/public-CFjLEOvt.js",
+    "name": "public",
+    "src": "resources/js/public.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-DqME6eCz.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  }
+}

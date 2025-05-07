@@ -1,0 +1,117 @@
+/* Modal container */
+.modal-trailer {
+    font-family: 'Arial', sans-serif;
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Sử dụng flexbox để căn giữa modal */
+    display: none;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;     /* Căn giữa theo chiều dọc */
+}
+
+/* Tiêu đề */
+#trailerTitle {
+    letter-spacing: -1px;
+    font-size: 23px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Nút đóng modal */
+.close-trailer {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Nội dung của modal */
+.modal-content-trailer {
+    margin: auto;
+    padding: 0;
+
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    animation: fadeIn 0.3s;
+    max-height: 80vh;
+    width: 90%; /* Cơ bản cho di động */
+
+    /* Tăng kích thước cho màn hình lớn hơn */
+    @media (min-width: 768px) {
+        width: 70%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
+}
+
+/* Responsive video */
+.video-container-trailer {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+}
+
+.video-container-trailer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Nội dung bên trong modal */
+.modal-body {
+    padding: 0;
+    text-align: center;
+    background-color: #fff;
+}
+
+/* Phần đầu của modal */
+.modal-header {
+    padding: 15px;
+    background-color: #fff0e7;
+}
+
+/* Hiệu ứng fadeIn cho modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive cho thiết bị di động */
+@media (max-width: 480px) {
+    #trailerTitle {
+        font-size: 16px;
+    }
+
+    .close-trailer {
+        font-size: 22px;
+    }
+
+    .modal-content-trailer {
+        width: 95%;
+    }
+}
+
+/* Điều chỉnh padding cho các thiết bị lớn hơn */
+@media (min-width: 768px) {
+    .modal-trailer {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}

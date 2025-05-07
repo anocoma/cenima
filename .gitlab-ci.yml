@@ -1,0 +1,87 @@
+variables:
+  DOCKER_BUILDKIT: 1
+  BUILDKIT_INLINE_CACHE: 1
+  DOCKER_IMAGE: ${REGISTRY_URL}/${REGISTRY_PROJECT}/${CI_PROJECT_NAME}:${CI_COMMIT_TAG}_${CI_COMMIT_SHORT_SHA}
+
+stages:
+  - buildandpush
+  - deploy
+  - migratedb
+  - showlog
+  - refreshdb
+
+buildandpush:
+  stage: buildandpush
+  variables:
+    GIT_STRATEGY: clone
+  before_script:
+    - docker login ${REGISTRY_URL} -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}
+  script:
+    - echo "Building Docker image..."
+    - docker pull ${DOCKER_IMAGE} || true
+    - docker build --cache-from=${DOCKER_IMAGE} --cache-to=type=inline -t $DOCKER_IMAGE .
+    # - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  tags:
+    - lab-server
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Đang deploy..."
+    - docker pull $DOCKER_IMAGE
+    - docker-compose down || true 
+    - docker-compose up -d 
+  tags:
+    - lab-server
+  only:
+    - tags
+
+migratedb:
+  stage: migratedb
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Running migratedb commands..."
+    - docker exec laravel_app php artisan migrate --force || { echo "Migration failed"; exit 1; }
+    - docker exec laravel_app php artisan db:seed --force || { echo "Seeding failed"; exit 1; }
+    - echo "migratedb completed."
+  tags:
+    - lab-server
+  only:
+    - tags
+  when: manual    
+
+showlog:
+  stage: showlog
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Showing logs..."
+    - docker exec laravel_app tail -n 10000 /var/www/storage/logs/laravel.log || echo "No laravel.log"
+    - docker logs --tail=100 laravel_app || echo "No logs for app"
+    - docker logs --tail=100 laravel_db || echo "No logs for db"
+  tags:
+    - lab-server
+  only:
+    - tags
+  when: manual  
+
+refreshdb:
+  stage: refreshdb
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Running initialization commands..."
+    - docker exec laravel_app php artisan migrate:refresh --force || { echo "Migration failed"; exit 1; }
+    - docker exec laravel_app php artisan db:seed --force || { echo "Seeding failed"; exit 1; }
+    - echo "Initialization completed."
+  tags:
+    - lab-server
+  only:
+    - tags
+  when: manual

@@ -1,0 +1,74 @@
+pipeline {
+    agent { label 'lab-server' }
+    environment {
+        APP_DIR = '/datas/cinema-jenkins'
+        APP_URL = 'http://192.168.199.99:7788'
+        DB_HOST = '127.0.0.1'
+        DB_PORT = '3306'
+        DB_NAME = 'cenima'
+        DB_USER = 'cenima'
+        DB_PASS = 'cenima'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist'
+                sh 'npm ci --quiet --prefer-offline'
+                sh 'npm run build'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to ${APP_DIR}...'
+                sh 'sudo pkill -f "php.*queue:work" || true'
+                sh 'sudo pkill -f "php.*schedule:work" || true'
+                sh 'sudo systemctl restart php8.1-fpm || true'
+                // Đồng bộ code từ workspace sang APP_DIR
+                sh "sudo rsync -a --delete . ${APP_DIR}/"
+                sh "sudo chown -R www-data:www-data ${APP_DIR}"
+                sh "sudo chmod -R 755 ${APP_DIR}"
+                // Copy và chỉnh sửa .env
+                sh "sudo -u www-data cp ${APP_DIR}/.env.example ${APP_DIR}/.env || echo 'No .env.example, creating empty .env'"
+                sh "sudo -u www-data sed -i 's|^APP_URL=.*|APP_URL=${APP_URL}|' ${APP_DIR}/.env || echo 'APP_URL=${APP_URL}' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=mysql|' ${APP_DIR}/.env || echo 'DB_CONNECTION=mysql' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_HOST=.*|DB_HOST=${DB_HOST}|' ${APP_DIR}/.env || echo 'DB_HOST=${DB_HOST}' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_PORT=.*|DB_PORT=${DB_PORT}|' ${APP_DIR}/.env || echo 'DB_PORT=${DB_PORT}' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_DATABASE=.*|DB_DATABASE=${DB_NAME}|' ${APP_DIR}/.env || echo 'DB_DATABASE=${DB_NAME}' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_USERNAME=.*|DB_USERNAME=${DB_USER}|' ${APP_DIR}/.env || echo 'DB_USERNAME=${DB_USER}' >> ${APP_DIR}/.env"
+                sh "sudo -u www-data sed -i 's|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|' ${APP_DIR}/.env || echo 'DB_PASSWORD=${DB_PASS}' >> ${APP_DIR}/.env"
+                // Laravel commands
+                sh "sudo -u www-data php ${APP_DIR}/artisan key:generate"
+                sh "sudo -u www-data php ${APP_DIR}/artisan migrate:refresh --force"
+                sh "sudo -u www-data php ${APP_DIR}/artisan storage:link || true"
+                sh "sudo -u www-data php ${APP_DIR}/artisan db:seed || true"
+                sh "sudo -u www-data php ${APP_DIR}/artisan config:cache --no-interaction"
+                sh "sudo -u www-data php ${APP_DIR}/artisan route:cache --no-interaction"
+                sh "sudo -u www-data sh -c \"cd ${APP_DIR} && (pgrep -f 'queue:work' && kill \$(pgrep -f 'queue:work')) || true\""
+                sh "sudo -u www-data sh -c \"cd ${APP_DIR} && nohup php artisan queue:work --daemon > queue.log 2>&1 &\""
+                sh "sudo -u www-data sh -c \"cd ${APP_DIR} && (pgrep -f 'schedule:work' && kill \$(pgrep -f 'schedule:work')) || true\""
+                sh "sudo -u www-data sh -c \"cd ${APP_DIR} && nohup php artisan schedule:work > schedule.log 2>&1 &\""
+                sh "sudo systemctl reload nginx || true"
+            }
+        }
+        stage('Show Logs') {
+            steps {
+                echo 'Displaying logs...'
+                sh "sudo -u www-data tail -n 100 ${APP_DIR}/storage/logs/laravel.log || echo 'No laravel.log found'"
+                sh "sudo -u www-data tail -n 100 ${APP_DIR}/queue.log || echo 'No queue.log found'"
+                sh "sudo -u www-data tail -n 100 ${APP_DIR}/schedule.log || echo 'No schedule.log found'"
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Build and deploy successful!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

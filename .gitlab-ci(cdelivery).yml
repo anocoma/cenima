@@ -1,0 +1,118 @@
+stages:
+  - build
+  - deploy
+  - showlog
+
+# Cache chung cho cả pipeline
+cache:
+  key: ${CI_COMMIT_REF_SLUG}  # Dùng branch hoặc tag làm key để phân biệt cache
+  paths:
+    - vendor/
+    - node_modules/
+
+build:
+  stage: build
+  variables:
+    GIT_STRATEGY: clone
+  script:
+    - echo "Building dự án..."
+    - composer install --no-interaction --optimize-autoloader
+    - npm ci --quiet
+    - npm run build
+  artifacts:
+    paths:
+      - public/  # Chỉ lưu assets đã build
+    expire_in: 1 day  # Giữ artifacts 1 ngày
+  tags:
+    - lab-server
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  script:
+    - |
+      if [ "$GITLAB_USER_LOGIN" = "andk" ]; then
+        # Dừng queue workers và scheduler
+        sudo -u www-data php artisan queue:restart || true
+        sudo /usr/bin/kill -9 $(ps -ef | grep "[p]hp.*schedule:work" | awk '{print $2}') || true
+        sudo systemctl restart php8.1-fpm
+
+        # Đồng bộ code và phân quyền
+        sudo rsync -a --delete . /datas/cenima/
+        sudo chown -R www-data:www-data /datas/cenima
+        sudo chmod -R 755 /datas/cenima
+        cd /datas/cenima
+
+        # Tạo .env nếu chưa có
+        if [ ! -f .env ]; then
+          sudo -u www-data sh -c "cp .env.example .env || echo 'No .env.example found, creating .env from scratch'"
+          sudo -u www-data sh -c "sed -i 's|^APP_URL=.*|APP_URL=http://192.168.199.99|' .env || echo 'APP_URL=http://192.168.199.99' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=mysql|' .env || echo 'DB_CONNECTION=mysql' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_HOST=.*|DB_HOST=127.0.0.1|' .env || echo 'DB_HOST=127.0.0.1' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_PORT=.*|DB_PORT=3306|' .env || echo 'DB_PORT=3306' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_DATABASE=.*|DB_DATABASE=cenima|' .env || echo 'DB_DATABASE=cenima' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_USERNAME=.*|DB_USERNAME=cenima|' .env || echo 'DB_USERNAME=cenima' >> .env"
+          sudo -u www-data sh -c "sed -i 's|^DB_PASSWORD=.*|DB_PASSWORD=cenima|' .env || echo 'DB_PASSWORD=cenima' >> .env"
+          sudo -u www-data php artisan key:generate
+          echo "Đã tạo .env với config db và key"
+        else
+          echo "File .env đã tồn tại, bỏ qua..."
+        fi
+
+        # Chạy lệnh khởi tạo lần đầu
+        if [ ! -f .initialized ]; then
+          sudo -u www-data php artisan migrate:refresh --force
+          sudo -u www-data php artisan storage:link || true
+          sudo -u www-data php artisan db:seed || true
+          sudo -u www-data touch .initialized
+          echo "Tạo file ghi nhớ lệnh khởi tạo lần đầu thành công"
+        else
+          echo "Đã có file ghi nhớ lệnh khởi tạo lần đầu, bỏ qua..."
+        fi
+
+        # Cấu hình Laravel
+        sudo -u www-data php artisan config:cache
+        sudo -u www-data php artisan route:cache
+
+        # Chạy workers dưới nền với kiểm tra
+        sudo -u www-data sh -c "pgrep -f 'queue:work' || nohup php artisan queue:work --daemon > queue.log 2>&1 &" || true
+        sudo -u www-data sh -c "pgrep -f 'schedule:work' || nohup php artisan schedule:work > schedule.log 2>&1 &" || true
+
+        # Reload Nginx
+        sudo systemctl reload nginx
+      else
+        echo "Permission Denied: Bạn không đủ quyền để chạy job này. Vui lòng liên hệ quản trị viên"
+        exit 1
+      fi
+  tags:
+    - lab-server
+  only:
+    - tags
+
+showlog:
+  stage: showlog
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  script:
+    - |
+      if [ "$GITLAB_USER_LOGIN" = "andk" ]; then
+        echo "Hiển thị 10000 dòng của Laravel app log..."
+        cd /datas/cenima
+        sudo -u www-data tail -n 10000 storage/logs/laravel.log || echo "Không tìm thấy laravel.log"
+        echo "Hiển thị 10000 dòng của queue log..."
+        sudo -u www-data tail -n 10000 queue.log || echo "Không tìm thấy queue.log"
+        echo "Hiển thị 10000 dòng của schedule log..."
+        sudo -u www-data tail -n 10000 schedule.log || echo "Không tìm thấy schedule.log"
+      else
+        echo "Permission Denied: Bạn không đủ quyền để chạy job này. Vui lòng liên hệ quản trị viên"
+        exit 1
+      fi
+  tags:
+    - lab-server
+  only:
+    - tags

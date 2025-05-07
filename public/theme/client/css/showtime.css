@@ -1,0 +1,271 @@
+
+
+.modalMovieScrening-header {
+    border-bottom: none;
+    padding: 15px;
+    background-color: #fff0e7;
+}
+
+.modalMovieScrening-title {
+    font-size: 23px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+
+}
+
+.modalMovieScrening-content {
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 70%;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    animation: fadeIn 0.3s;
+    max-height: 80vh;
+    /* Giới hạn chiều cao tối đa */
+}
+
+.modalMovieScrening-body {
+    padding: 0 20px;
+    overflow-y: auto;
+    /* Thêm cuộn dọc */
+    max-height: 58vh;
+    /* Chiều cao tối đa cho nội dung modal */
+    margin-bottom: 30px;
+    min-height: 55vh;
+}
+/* Modal Styles */
+.modalMovieScrening {
+    font-family: 'Arial', sans-serif;
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 100px;
+    margin-bottom: 100px;
+}
+
+.modalMovieScrening-content {
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 1050px;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Close Button */
+.closeModalMovieScrening {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+
+}
+
+/*  */
+
+
+.cinema-title {
+    font-size: 23px;
+    font-weight: bold;
+    margin: 25px 0;
+    text-align: center;
+}
+
+/* Date Picker Styles */
+.listMovieScrening-date {
+    display: flex;
+    flex-wrap: wrap;
+
+    padding: 0 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+
+}
+
+.listMovieScrening-date div {
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: normal;
+    color: #23316e;
+    padding: 10px 8px;
+    margin: 0px 20px;
+    font-weight: 600;
+
+
+}
+
+.listMovieScrening-date div.active {
+    color: #ff7307;
+    font-weight: bold;
+    border-bottom: 3px solid #ff7307;
+}
+
+.listMovieScrening-date div:hover {
+    color: #ff7307;
+}
+
+
+
+
+
+/* Button */
+.btn {
+    padding: 10px 20px;
+    background-color: #ff7307;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
+.btn:hover {
+    background-color: #ff7307;
+}
+
+/* Responsive Styles for Tablets and Small Screens */
+@media (max-width: 1200px) {
+    .modalMovieScrening-content {
+        width: 60%;
+    }
+
+
+}
+
+/* Responsive Styles for Tablets */
+@media (max-width: 992px) {
+    .modalMovieScrening-content {
+        width: 70%;
+    }
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+    .modalMovieScrening-content {
+        width: 85%;
+    }
+
+
+    .listMovieScrening-date div {
+        width: 22%;
+        font-size: 16px;
+        padding: 5px 5px;
+        margin: 10px;
+    }
+
+    .listMovieScrening-date {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .listMovieScrening-date {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .modalMovieScrening-content {
+        width: 90%;
+    }
+
+    .listMovieScrening-date div {
+        width: 30%;
+        font-size: 16px;
+        padding: 5px 5px;
+        margin: 5px;
+    }
+
+
+    .modalMovieScrening-header {
+        padding: 8px;
+    }
+
+    .modalMovieScrening-title {
+        font-size: 13px;
+    }
+
+    .listMovieScrening-date {
+        flex-wrap: wrap;
+    }
+
+
+    .listMovieScrening-date {
+        display: flex;
+        font-size: 16px;
+        justify-content: flex-start;
+    }
+
+}
+.version-movie{
+    margin: 20px 0 ;
+    font-weight: 600;
+    color: #23316e;
+}
+
+.list-showtimes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+.showtime-item-start-time {
+    padding: 10px 20px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    position: relative;
+    font-weight: 600;
+}
+
+.showtime-item-start-time:hover {
+    color: #ff7307;
+}
+
+.showtime-room-version {
+    margin-top: 35px;
+}
+
+.empty-seat-showtime {
+    font-size: 13.5px;
+    text-align: center;
+    margin: 5px;
+
+}
+
+.movieScrening-list-showtime-day {
+    display: none;
+    /* Ẩn các lịch chiếu theo ngày */
+    margin-bottom: 30px;
+}
+

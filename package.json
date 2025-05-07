@@ -10,9 +10,11 @@
         "laravel-echo": "^1.16.1",
         "laravel-vite-plugin": "^1.0.0",
         "pusher-js": "^8.4.0-rc2",
+        "sass-embedded": "^1.85.1",
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
         "bootstrap": "^5.3.3",
         "popper.js": "^1.16.1",
         "quagga": "^0.12.1",

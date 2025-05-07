@@ -1,0 +1,39 @@
+services:
+  app:
+    container_name: laravel_app
+    image: ${DOCKER_IMAGE}
+    working_dir: /var/www
+    ports:
+      - "8000:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  db:
+    container_name: laravel_db
+    image: mariadb:10.6
+    environment:
+      MYSQL_DATABASE: datn-hn5
+      MYSQL_USER: andk
+      MYSQL_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: 123
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:

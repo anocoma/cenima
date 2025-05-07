@@ -1,0 +1,133 @@
+hr {
+    border: 0;
+    /* Loại bỏ đường viền mặc định */
+    border-top: 1px solid rgb(214, 213, 213);
+    /* Đặt màu và độ dày của đường */
+    margin: 20px 0;
+    /* Tùy chỉnh khoảng cách trên và dưới */
+    width: 100%;
+    /* Chiều rộng của hr */
+}
+
+.top-bot {
+    margin-bottom: 30px;
+    margin-top: 17px;
+}
+
+/* Style cho các tab ngày */
+.listMovieScrening-date {
+    display: flex;
+    flex-wrap: wrap;
+    /* Đảm bảo các phần tử tự động xuống dòng */
+    justify-content: flex-start;
+    /* Sắp xếp từ trái qua phải */
+    padding: 0 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.listMovieScrening-date div {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: normal;
+    color: #23316e;
+    padding: 10px 10px;
+    margin: 0 16px;
+    flex: 0 1 auto;
+    /* Cho phép các phần tử co giãn */
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.listMovieScrening-date div.active {
+    color: #ff7307;
+    font-weight: bold;
+    border-bottom: 3px solid #ff7307;
+}
+
+
+
+.movie-poster {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.movie-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.movie-info {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+}
+
+.movie-info li {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Style cho phần lịch chiếu */
+.showtime-section {
+    margin-top: 20px;
+}
+
+.showtime-title {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #212d64;
+}
+
+.showtime-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.showtime-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    position: relative;
+    font-weight: 600;
+}
+
+.showtime-btn:hover {
+    color: #ff7307;
+}
+
+/* Khi button được chọn */
+.showtime-btn.selected {
+    color: #ff7307;
+}
+
+.showtime-bot {
+    margin-bottom: 20px
+}
+
+.div-1 {
+    margin: 130px 0px 170px 0px;
+}
+
+.p-1 {
+    text-align: center;
+    font-size: 30px;
+}
+.xanh-fpt1 {
+    color: #23316e;
+}
+.xanh-fpt1:hover {
+    color: #ff7307;
+}
+.icons{
+    font-size: 15px;
+    color: #1f3180;
+
+}

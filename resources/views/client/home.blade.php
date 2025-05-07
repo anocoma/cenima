@@ -55,18 +55,19 @@
                                                     @if ($imageTag)
                                                         <img class="tag-rating" src="{{ $imageTag }}" alt="">
                                                     @endif
+                                                    
                                                     @php
                                                         $url = $movie->img_thumbnail;
-
                                                         if (!\Str::contains($url, 'http')) {
                                                             $url = Storage::url($url);
                                                         }
-
                                                     @endphp
 
                                                     <div class='img_thumbnail_movie'>
                                                         <img src="{{ $url }}" alt="movie_img" />
                                                     </div>
+
+
                                                     <div class='movie_img_trailer'>
                                                         <div class='animation-icon open-trailer-btn'
                                                             data-trailer-url="https://www.youtube.com/embed/{{ $movie->trailer_url }}"

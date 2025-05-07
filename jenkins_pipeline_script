@@ -1,0 +1,272 @@
+def stopProcess() {
+    stage("Stop Process") {
+        script {
+            sh(script: "sudo pkill -f 'php.*queue:work' || true", label: "Kill queue worker")
+            sh(script: "sudo pkill -f 'php.*schedule:work' || true", label: "Kill schedule worker")
+            sh(script: "sudo systemctl restart php8.1-fpm || true", label: "Restart php-fpm")
+        }
+    }
+}
+
+def startProcess() {
+    stage("Start Process") {
+        script {
+            sh(script: """/bin/bash -c "
+                sudo -u www-data sh -c \\"cd '${env.FOLDER_DEPLOY}' && nohup php artisan queue:work --daemon > queue.log 2>&1 &\\"
+            " """.stripIndent(), label: "Start queue:work")
+            sh(script: """/bin/bash -c "
+                sudo -u www-data sh -c \\"cd '${env.FOLDER_DEPLOY}' && nohup php artisan schedule:work > schedule.log 2>&1 &\\"
+            " """.stripIndent(), label: "Start schedule:work")
+
+            // Kiểm tra xem process đã khởi động chưa
+            def queueWorkPid = sh(script: "/bin/bash -c \"pgrep -f 'php.*queue:work' || true\"", returnStdout: true).trim()
+            def scheduleWorkPid = sh(script: "/bin/bash -c \"pgrep -f 'php.*schedule:work' || true\"", returnStdout: true).trim()
+            if (!queueWorkPid) error("Failed to start queue:work process")
+            if (!scheduleWorkPid) error("Failed to start schedule:work process")
+        }
+    }
+}
+
+def backupProcess() {
+    stage("Backup") {
+        script {
+            // Kiểm tra thư mục và file
+            def canBackup = sh(script: """/bin/bash -c "
+                [ -d '${env.FOLDER_DEPLOY}' ] && find '${env.FOLDER_DEPLOY}' -maxdepth 1 -type f | grep -q . && echo 'true' || echo 'false'
+            " """.stripIndent(), returnStdout: true).trim()
+            if (canBackup != "true") return
+
+            def timeStamp = new Date().format("ddMMyyyy_HHmm", TimeZone.getTimeZone('Asia/Ho_Chi_Minh'))
+            def zipFileName = "${env.APP_NAME}_${timeStamp}.zip"
+            def targetZipPath = "${env.FOLDER_MAIN}/backups/${zipFileName}"
+
+            sh(script: """/bin/bash -c "
+                mkdir -p '${env.FOLDER_BACKUPS}' &&
+                cd '${env.FOLDER_MAIN}' &&
+                zip -rq9 '${targetZipPath}' run &&
+                [ -f '${targetZipPath}' ] || exit 1
+            " """.stripIndent(), label: "Create backup")
+            def zipSize = sh(script: "/bin/bash -c \"du -h '${targetZipPath}' | cut -f1\"", returnStdout: true).trim()
+            echo "Backup created at ${targetZipPath} (Size: ${zipSize})"
+        }
+    }
+}
+
+def rollbackProcess() {
+    stage("Rollback") {
+        script {
+            def rollbackFile = "${env.FOLDER_BACKUPS}/${params.ROLLBACK_VERSION}"
+            if (!fileExists(rollbackFile)) error("Backup file ${rollbackFile} does not exist.")
+
+            sh(script: """/bin/bash -c "
+                sudo rm -rf '${env.FOLDER_DEPLOY}' &&
+                sudo unzip -o '${rollbackFile}' -d '${env.FOLDER_MAIN}' &&
+                [ -d '${env.FOLDER_DEPLOY}' ] || exit 1 &&
+                sudo chown -R www-data:www-data '${env.FOLDER_DEPLOY}' &&
+                sudo chmod -R 755 '${env.FOLDER_DEPLOY}'
+            " """.stripIndent(), label: "Rollback and set permissions")
+        }
+    }
+}
+
+def checkoutCode() {
+    stage("Checkout Code") {
+        script {
+            if (!params.HASH) error("Hash is required for code update.")
+
+            def checkoutResult = checkout([
+                $class: 'GitSCM',
+                branches: [[name: params.HASH]],
+                userRemoteConfigs: [[
+                    credentialsId: 'jenkins-gitlab-user-account',
+                    url: 'http://git.antech.io/cenima/cenima.git'
+                ]]
+            ])
+
+            sh(script: """/bin/bash -c "
+                sudo mkdir -p '${env.FOLDER_DEPLOY}' &&
+                sudo rsync -av --delete '${WORKSPACE}/' '${env.FOLDER_DEPLOY}/' &&
+                sudo chown -R jenkins:jenkins '${env.FOLDER_DEPLOY}' &&
+                sudo chmod -R 755 '${env.FOLDER_DEPLOY}'
+            " """.stripIndent(), label: "Sync code")
+            return checkoutResult
+        }
+    }
+}
+
+def upCodeProcess() {
+    stage("Update Code Latest") {
+        script {
+            def deployDirExists = fileExists("${env.FOLDER_DEPLOY}/.git")
+
+            if (!deployDirExists) {
+                echo "❗ Deployment folder does not exist or has no Git history. Performing initial setup with data reset..."
+                def checkoutResult = checkoutCode()
+                buildProcess()
+                deployWithReset()
+            } else {
+                echo "📂 Deployment folder exists. Checking for code changes..."
+                def checkoutResult = checkoutCode()
+                def previousCommit = checkoutResult.GIT_PREVIOUS_SUCCESSFUL_COMMIT ?: 'HEAD^'
+                def currentCommit = checkoutResult.GIT_COMMIT
+
+                def changes = sh(script: """/bin/bash -c "
+                    cd '${env.FOLDER_DEPLOY}' &&
+                    git config --global --add safe.directory '${env.FOLDER_DEPLOY}' &&
+                    git diff --name-only '${previousCommit}' '${currentCommit}' || true
+                " """.stripIndent(), returnStdout: true).trim()
+
+                if (changes) {
+                    def dependencyChanges = sh(script: """/bin/bash -c "
+                        cd '${env.FOLDER_DEPLOY}' &&
+                        git config --global --add safe.directory '${env.FOLDER_DEPLOY}' &&
+                        git diff --name-only '${previousCommit}' '${currentCommit}' | grep -E 'composer.json|package.json|.env.example' || true
+                    " """.stripIndent(), returnStdout: true).trim()
+                    if (dependencyChanges) buildProcess()
+                    deployNoReset()
+                }
+            }
+        }
+    }
+}
+
+def buildProcess() {
+    stage("Build Project") {
+        script {
+            sh(script: """/bin/bash -c "
+                cd '${env.FOLDER_DEPLOY}' &&
+                git config --global --add safe.directory '${env.FOLDER_DEPLOY}' &&
+                composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist &&
+                npm ci --prefer-offline --no-audit --progress=false &&
+                npm run build
+            " """.stripIndent(), label: "Build project")
+        }
+    }
+}
+
+def deployWithReset() {
+    stage("Deploy Project With Reset") {
+        script {
+            sh(script: "/bin/bash -c \"sudo chown -R www-data:www-data '${env.FOLDER_DEPLOY}' && sudo chmod -R 755 '${env.FOLDER_DEPLOY}'\"", label: "Set permissions")
+
+            def artisanStatus = sh(script: """/bin/bash -c "
+                cd '${env.FOLDER_DEPLOY}' &&
+                sudo -u www-data ls -la .env.example || echo 'No .env' &&
+                sudo -u www-data cp .env.example .env || echo 'Failed to copy .env file' &&
+                sudo -u www-data sed -i \\
+                    -e 's|^APP_URL=.*|APP_URL=${env.APP_URL}|' \\
+                    -e 's|^DB_CONNECTION=.*|DB_CONNECTION=mysql|' \\
+                    -e 's|^DB_HOST=.*|DB_HOST=${env.DB_HOST}|' \\
+                    -e 's|^DB_PORT=.*|DB_PORT=${env.DB_PORT}|' \\
+                    -e 's|^DB_DATABASE=.*|DB_DATABASE=${env.DB_NAME}|' \\
+                    -e 's|^DB_USERNAME=.*|DB_USERNAME=${env.DB_USER}|' \\
+                    -e 's|^DB_PASSWORD=.*|DB_PASSWORD=${env.DB_PASS}|' .env &&
+                sudo -u www-data php artisan key:generate || true &&
+                sudo -u www-data php artisan migrate:refresh --force &&
+                sudo -u www-data php artisan queue:table || true &&
+                sudo -u www-data php artisan storage:link || true &&
+                sudo -u www-data php artisan db:seed || true &&
+                sudo -u www-data php artisan config:cache --no-interaction &&
+                sudo -u www-data php artisan route:cache --no-interaction
+            " """.stripIndent(), returnStatus: true, label: "Run artisan commands")
+
+            if (artisanStatus != 0) error("Failed to execute artisan commands in deployWithReset. Exit code: ${artisanStatus}")
+            sh(script: "/bin/bash -c \"sudo systemctl reload nginx || true\"", label: "Reload nginx")
+        }
+    }
+}
+
+def deployNoReset() {
+    stage("Deploy Project Without Reset") {
+        script {
+            sh(script: "/bin/bash -c \"sudo chown -R www-data:www-data '${env.FOLDER_DEPLOY}' && sudo chmod -R 755 '${env.FOLDER_DEPLOY}'\"", label: "Set permissions")
+
+            def artisanStatus = sh(script: """/bin/bash -c "
+                cd '${env.FOLDER_DEPLOY}' &&
+                sudo -u www-data ls -la .env.example || echo 'Không thấy .env.example' &&
+                sudo -u www-data cp .env.example .env || echo 'Sao chép .env thất bại' &&
+                sudo -u www-data sed -i \\
+                    -e 's|^APP_URL=.*|APP_URL=${env.APP_URL}|' \\
+                    -e 's|^DB_CONNECTION=.*|DB_CONNECTION=mysql|' \\
+                    -e 's|^DB_HOST=.*|DB_HOST=${env.DB_HOST}|' \\
+                    -e 's|^DB_PORT=.*|DB_PORT=${env.DB_PORT}|' \\
+                    -e 's|^DB_DATABASE=.*|DB_DATABASE=${env.DB_NAME}|' \\
+                    -e 's|^DB_USERNAME=.*|DB_USERNAME=${env.DB_USER}|' \\
+                    -e 's|^DB_PASSWORD=.*|DB_PASSWORD=${env.DB_PASS}|' .env &&
+                sudo -u www-data php artisan key:generate || true &&
+                sudo -u www-data php artisan queue:table || true &&
+                sudo -u www-data php artisan storage:link || true &&
+                sudo -u www-data php artisan config:cache --no-interaction &&
+                sudo -u www-data php artisan route:cache --no-interaction
+            " """.stripIndent(), returnStatus: true, label: "Run artisan commands")
+            if (artisanStatus != 0) error("Failed to execute artisan commands in deployNoReset. Exit code: ${artisanStatus}")
+
+            sh(script: "/bin/bash -c \"sudo systemctl reload nginx || true\"", label: "Reload nginx")
+        }
+    }
+}
+
+pipeline {
+    agent { label "${params.SERVER}" }
+
+    environment {
+        APP_NAME       = 'cinema-app'
+        FOLDER_MAIN    = '/datas/cinema-jenkins'
+        FOLDER_DEPLOY  = "${env.FOLDER_MAIN}/run"
+        FOLDER_BACKUPS = "${env.FOLDER_MAIN}/backups"
+        APP_URL        = 'http://192.168.199.99:7788'
+        DB_HOST        = '127.0.0.1'
+        DB_PORT        = '3306'
+        DB_NAME        = 'cenima'
+        DB_USER        = 'cenima'
+        DB_PASS        = 'cenima'
+    }
+
+    stages {
+        stage("Run Pipeline") {
+            steps {
+                script {
+                    try {
+                        if (params.ACTION == "upcode") {
+                            stopProcess()
+                            backupProcess()
+                            upCodeProcess()
+                            startProcess()
+                        } else if (params.ACTION == "deploy") {
+                            checkoutCode()
+                            buildProcess()
+                            stopProcess()
+                            backupProcess()
+                            deployNoReset()
+                            startProcess()
+                        } else if (params.ACTION == "deployReset") {
+                            checkoutCode()
+                            buildProcess()
+                            stopProcess()
+                            backupProcess()
+                            deployWithReset()
+                            startProcess()
+                        } else if (params.ACTION == "rollback") {
+                            stopProcess()
+                            rollbackProcess()
+                            startProcess()
+                        } else {
+                            error("Invalid ACTION: ${params.ACTION}. Must be 'upcode', 'deploy', 'deployReset', or 'rollback'.")
+                        }
+                        echo "✅ Pipeline completed successfully!"
+                    } catch (Exception e) {
+                        echo "❌ Pipeline failed: ${e.message}"
+                        // Đảm bảo dừng các process queue/schedule khi pipeline thất bại
+                        sh(script: """/bin/bash -c "
+                            sudo pkill -f 'php.*queue:work' || true;
+                            sudo pkill -f 'php.*schedule:work' || true
+                        " """.stripIndent(), label: "Kill processes on failure")
+                        throw e
+                    } finally {
+                        echo "📦 Pipeline finished!"
+                    }
+                }
+            }
+        }
+    }
+}

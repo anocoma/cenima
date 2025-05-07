@@ -1,0 +1,620 @@
+td.table-showtime {
+    padding: 0px;
+    padding-bottom: 20px;
+}
+
+.status-showtime {
+    width: 120px;
+}
+
+i.ri-add-circle-fill {
+    /* color: crimson; */
+    font-size: 15px;
+    border: 2px solid #ccc5c5;
+    border-radius: 50%;
+}
+
+.ri-indeterminate-circle-fill:before {
+    content: "\ee56";
+    font-size: 15px;
+    color: #f06548;
+    border: 2px solid #ccc5c5;
+    border-radius: 50%;
+}
+
+
+.inputCheckBoxShowtimes {
+    width: 36px;
+}
+
+td.table-showtime-row {
+    /* padding: 0px; */
+    /* padding-top: 10px; */
+    /* border-top: 0px; */
+    text-align: center;
+}
+
+td.table-showtime-row table thead {
+    height: 35px;
+}
+
+td.plusShowtime {
+    width: 25px;
+}
+
+td.plusShowtime .toggle-button {
+    /* width: 24px; */
+    padding: 6px;
+}
+
+.card-left {
+    height: 96.6%;
+
+}
+
+.box-permission-role {
+    max-height: 450px;
+    overflow: auto;
+}
+
+.box-search-role {
+    display: flex;
+}
+
+.box-search-role input#search-permission {
+    width: 265px;
+}
+
+.box-search-role button.btn.btn-primary.btn-search-role {
+    margin-left: 8px;
+}
+
+.box-permission-role input.checkboxAll {
+    margin-left: 35px;
+}
+
+.srceen {
+    background-color: #ccc;
+    height: 30px;
+    margin: 20px 0;
+    border-radius: 10px;
+    position: relative;
+    color: #2a2a2a;
+    text-align: center;
+    line-height: 30px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+.card-seat {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+.seat-item {
+    position: relative;
+    /* Đặt vị trí tương đối cho container */
+    display: inline-block;
+    /* Đảm bảo kích thước của container phù hợp với nội dung */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+}
+
+.seat-item img {
+    display: block;
+    /* Đảm bảo hình ảnh được xử lý như một block element */
+}
+
+.seat-label {
+    position: absolute;
+    /* Đặt vị trí tuyệt đối cho phần tử */
+    top: 40%;
+    /* Căn giữa theo chiều dọc */
+    left: 50%;
+    /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%);
+    /* Đưa phần tử trở lại giữa chính xác */
+    font-size: 9px;
+    /* Kích thước của văn bản */
+    font-weight: 500;
+    /* Thêm các thuộc tính khác như padding, background-color nếu cần */
+    color: #2a2a2a;
+}
+
+.seat-label-double {
+    position: absolute;
+    /* Đặt vị trí tuyệt đối cho phần tử */
+    top: 40%;
+    /* Căn giữa theo chiều dọc */
+    left: 50%;
+    /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%);
+    /* Đưa phần tử trở lại giữa chính xác */
+    font-size: 9px;
+    /* Kích thước của văn bản */
+    font-weight: 500;
+    /* Thêm các thuộc tính khác như padding, background-color nếu cần */
+    color: #2a2a2a;
+    word-spacing: 0.4em;
+    width: 66px;
+}
+
+.seat-label-pro {
+    position: absolute;
+    /* Đặt vị trí tuyệt đối cho phần tử */
+    top: 35%;
+    /* Căn giữa theo chiều dọc */
+    left: 53%;
+    /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%);
+    /* Đưa phần tử trở lại giữa chính xác */
+    font-size: 10px;
+    /* Kích thước của văn bản */
+    font-weight: 600;
+    /* Thêm các thuộc tính khác như padding, background-color nếu cần */
+    color: #2a2a2a;
+}
+
+.seat-label-double-pro {
+    position: absolute;
+    /* Đặt vị trí tuyệt đối cho phần tử */
+    top: 35%;
+    /* Căn giữa theo chiều dọc */
+    left: 52.5%;
+    /* Căn giữa theo chiều ngang */
+    transform: translate(-50%, -50%);
+    /* Đưa phần tử trở lại giữa chính xác */
+    font-size: 10px;
+    /* Kích thước của văn bản */
+    font-weight: 600;
+    /* Thêm các thuộc tính khác như padding, background-color nếu cần */
+    color: #2a2a2a;
+    word-spacing: 0.8em;
+}
+
+
+.img-movie {
+    width: 40%;
+}
+
+.seat-row {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.layout-seat {
+    overflow-x: auto;
+    white-space: nowrap;
+    align-content: center;
+    text-align: center;
+}
+
+.resset-password {
+    color: orangered;
+    cursor: pointer;
+}
+
+
+.resset-password:hover {
+    color: rgb(231, 2, 2)
+}
+
+.box-item {
+    width: 35px;
+    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
+}
+
+.box-item-pro {
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+}
+
+
+
+.icon-pointer {
+    cursor: pointer;
+}
+
+.seat-item img {
+    -webkit-user-drag: none;
+    /* Ngăn người dùng kéo hình ảnh trong trình duyệt WebKit (Chrome, Safari) */
+    -webkit-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên trình duyệt WebKit (Chrome, Safari) */
+    -moz-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên Firefox */
+    -ms-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên trình duyệt Internet Explorer và Edge */
+    user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên các trình duyệt hỗ trợ chuẩn */
+}
+
+.box-item-seat img {
+    -webkit-user-drag: none;
+    /* Ngăn người dùng kéo hình ảnh trong trình duyệt WebKit (Chrome, Safari) */
+    -webkit-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên trình duyệt WebKit (Chrome, Safari) */
+    -moz-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên Firefox */
+    -ms-user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên trình duyệt Internet Explorer và Edge */
+    user-select: none;
+    /* Ngăn người dùng chọn và sao chép hình ảnh trên các trình duyệt hỗ trợ chuẩn */
+}
+
+.box-item-seat {
+    cursor: pointer;
+    /* Hiển thị con trỏ dạng tay khi hover */
+}
+
+.light-orange {
+    background-color: #fcf5e6;
+    /* Màu cam nhạt */
+}
+
+.light-blue {
+    background-color: #fcfdff;
+    /* Màu xanh da trời nhạt */
+}
+
+.light-pink {
+    background-color: #ffebf6;
+    /* Màu hồng nhạt */
+}
+
+
+
+/* Css trang Quản lý suất chiếu */
+.btn-start-time {
+    margin-top: 26px;
+}
+
+.delete-showtime {
+    margin-top: 3px;
+}
+
+.showtime-item {
+    padding: 10px 0;
+}
+
+
+
+.showtime-item p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #666;
+}
+
+.list-showtimes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.showtime-item-start-time {
+    width: 100px;
+    text-align: center;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    font-size: 1.1em;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.showtime-item-start-time:hover {
+    background-color: #f0f0f0;
+}
+
+.empty-seat-showtime {
+    font-size: 12px;
+    text-align: center;
+    margin: 5px;
+
+}
+
+.list-seats {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+}
+
+.list-seat {
+    display: flex;
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    gap: 5px;
+    /* Khoảng cách giữa ảnh và văn bản */
+}
+
+.list-seat span {
+    height: 30px;
+    display: flex;
+    /* Sử dụng flexbox để căn giữa nội dung */
+    align-items: center
+}
+
+
+
+.seat-vip-svg {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    --svg: url('../../../../svg/seat-vip.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.seat-regular-svg {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    --svg: url('../../../../svg/seat-regular.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.seat-double-svg {
+    display: inline-block;
+    width: 70px;
+    height: 35px;
+    --svg: url('../../../../svg/seat-double.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.seat-vip-svg-pro {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    --svg: url('../../../../svg/seat-vip.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.seat-regular-svg-pro {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    --svg: url('../../../../svg/seat-regular.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.seat-double-svg-pro {
+    display: inline-block;
+    width: 80px;
+    height: 40px;
+    --svg: url('../../../../svg/seat-double.svg');
+    background-color: currentColor;
+    color: #cccccc;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+
+.seat-hold {
+    color: rgb(0, 0, 195);
+}
+
+.seat-selected {
+    color: rgb(38, 151, 244);
+
+}
+
+.seat-sold {
+    color: #ff7307;
+}
+
+.status-seat {
+    font-size: 12px;
+    white-space: nowrap;
+    /* Không cho xuống dòng */
+}
+
+.legend {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid rgb(138, 138, 138);
+    border-radius: 5px;
+    height: 50px;
+}
+
+.legend div {
+    /* margin: 0px 20px; */
+    padding: 0px 12px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid rgb(222, 222, 222);
+
+}
+
+.legend>div:last-child {
+    border-right: none;
+    /* Bỏ border-right cho div cuối cùng */
+}
+
+.legend span {
+
+    height: 30px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.legend p {
+    margin: 0;
+}
+
+/* Css trang thanh toán checkout admin */
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    /* padding: 0px 7px; */
+    cursor: pointer;
+    /* font-size: 18px; */
+}
+
+.quantity-btn:hover {
+    background-color: #ddd;
+}
+
+.quantity-input {
+    width: 30px;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin: 0 10px;
+    font-size: 13px;
+}
+
+/* Css đoạn voucher */
+/* Css cho phương thức thanh toán */
+
+.box-payment-checkout .payment-checkout img {
+    width: 35px;
+    height: auto;
+    border: 0.2px solid #cccccc;
+    border-radius: 4px;
+}
+
+.img-payment-checkout label {
+    cursor: pointer;
+}
+
+/* Css cho phương thức thanh toán :v */
+
+.box-checkout .total-price-checkout>div {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.box-checkout .total-price-checkout p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.box-checkout .total-price-checkout .text-danger {
+    color: #f1761d;
+    /* Màu đỏ */
+    font-size: 1.2em;
+}
+
+
+
+.box-checkout .text-info-checkout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.box-checkout .text-info-checkout h4 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #333;
+}
+
+/* .payment-checkout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+} */
+
+.box-checkout .payment-checkout .img-payment-checkout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.box-checkout .payment-checkout img {
+    width: 30px;
+    height: auto;
+}
+
+.box-checkout .payment-checkout label {
+    font-size: 1em;
+    font-weight: normal;
+    color: #333;
+}
+
+.box-checkout .payment-checkout input[type="radio"] {
+    margin-right: 10px;
+}
+
+.box-checkout hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+.box-checkout form {
+    display: ruby;
+}
+
+.box-checkout .payment-checkout input[type="radio"] {
+    margin-right: 8px;
+    width: 15px;
+    font-size: 14px;
+    height: 15px;
+}
+
+
+/* Gữi chỗ */

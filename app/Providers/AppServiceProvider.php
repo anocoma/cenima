@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Đặt timezone mặc định cho Carbon
-        Carbon::setLocale(config('app.timezone'));
+        Carbon::setLocale(config('app.locale'));
         date_default_timezone_set(config('app.timezone'));
         Paginator::useBootstrapFive();
     }

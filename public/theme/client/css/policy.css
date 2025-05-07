@@ -1,0 +1,21 @@
+.container-policy .box-policy {
+    line-height: 30px;
+}
+.container-policy .box-policy .text-policy {
+    /* line-height: inherit; */
+    margin-top: 25px;
+}
+
+.note-policy {
+    margin-top: 15px;
+}
+.main-menu-policy {
+    font-size: 15px;
+}
+
+.main-menu-policy li {
+    margin: 7px 3px 7px 5px;
+}
+.img_policy img {
+    border-radius: 10px;
+}

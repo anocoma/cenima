@@ -1,0 +1,156 @@
+/*sao*/
+.st_rating_box{
+    width: 10%;
+    height: 70px;
+    padding-top: 4px;
+    padding-right: 6px;
+    padding-left: 4px;
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-radius:4px 0  0 4px ;
+}
+.st_rating_box .rating>label{
+    color: rgba(22, 40, 100, 0.3);
+    margin-bottom: 0;
+}
+.st_rating_box .rating h5{
+    text-align: center;
+}
+.st_rating_box .rating p{
+    text-align: center;
+}
+.form-comment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-textarea {
+    width: 70%;
+    height: 70px;
+}
+
+.form-textarea textarea {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 0;
+}
+.textarea-comment {
+    width: 100%;
+    height: 70px;
+    /*border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;*/
+    /*border: 1px solid #ddd;
+    border-radius: 5px;*/
+    resize: none;
+}
+
+.button-submit-comment {
+    display: flex;
+    width: 20%;
+    height: 70px;
+    text-align: center;
+    margin: 0;
+}
+.submit-review {
+    background-color: #2e2e2e;
+    color: #d9d097;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.submit-review:hover {
+    background-color: #252525;
+}
+
+
+/* Vô hiệu hóa hiệu ứng hover cho sao*/
+#ratingDisable {
+    pointer-events: none; /* Ngăn chặn mọi tương tác chuột */
+    cursor: default;      /* Hiển thị con trỏ mặc định */
+}
+
+#ratingDisable:hover {
+    /* Không làm gì khi hover vào nhãn */
+    background-color: transparent; /* Loại bỏ màu nền khi hover */
+    color: inherit;                /* Giữ nguyên màu sắc */
+    border: none;                  /* Loại bỏ viền */
+    box-shadow: none;              /* Loại bỏ hiệu ứng đổ bóng */
+    transform: none;               /* Không có hiệu ứng dịch chuyển */
+}
+
+
+
+
+
+@media (max-width: 768px) {
+    .form-textarea {
+        width: 50%;
+        height: 60px;
+    }
+
+    .button-submit-comment {
+        display: flex;
+        width: 50%;
+        height: 60px;
+        /* Ensures both have the same height */
+        text-align: center;
+        /* Match the parent height */
+        margin: 0;
+        /* Remove margin to avoid extra space */
+    }
+
+    .form-comment {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+/*button comment*/
+.content-cmt {
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 20px 0;
+}
+
+.content-cmt button {
+padding: 8px 17px;
+margin: 0 5px;
+font-size: 16px;
+background-color: #f0f0f0;
+border: 1px solid #ccc;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.content-cmt button:disabled {
+background-color: #e0e0e0;
+border-color: #bbb;
+cursor: not-allowed;
+}
+
+.content-cmt button:hover:enabled {
+background-color: #f1761d;
+color: #fff;
+border-color: #f1761d;
+transition: background-color 0.3s ease, color 0.3s ease;
+}
